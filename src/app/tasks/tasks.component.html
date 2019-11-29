@@ -1,8 +1,28 @@
 ﻿<div class="example-container mat-elevation-z8">
-  <div class="example-loading-shade" *ngIf="isLoadingResults || isRateLimitReached">
-    <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
-    <div class="example-rate-limit-reached" *ngIf="isRateLimitReached">
+    <div class="example-header">
+        <div class="button-row">
+          <button matTooltip="Новый" (click)="openDialogAdd()" mat-icon-button>
+            <mat-icon aria-label="add">add</mat-icon>
+          </button>
+          <button matTooltip="Редактировать" mat-icon-button mat-icon-button>
+            <mat-icon aria-label="edit">edit</mat-icon>
+          </button>
+          <button mat-icon-button [matMenuTriggerFor]="menu">
+            <mat-icon>brush</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button *ngFor="let option of colors" mat-menu-item [style.background-color]="option.value">
+              <mat-icon>brush</mat-icon>
+              <span></span>
+            </button>
+          </mat-menu>
+        </div>
+      </div>
 
+  <div class="example-loading-shade" *ngIf="loading.isLoadingResults || loading.isRateLimitReached">
+    <mat-spinner *ngIf="loading.isLoadingResults"></mat-spinner>
+    <div class="example-rate-limit-reached" *ngIf="loading.isRateLimitReached">
+      Что то пошло не по плану. Не могу получить данные с сервера.
     </div>
   </div>
 

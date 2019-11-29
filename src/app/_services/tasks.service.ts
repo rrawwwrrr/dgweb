@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Task, InitData, Env, System } from '../_models';
+import { Task, InitData, Env, System, SystemList } from '../_models';
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -9,17 +9,20 @@ export class TaskService {
     private host = environment.apiUrl;
     public taskSource: BehaviorSubject<Task[]> = new BehaviorSubject<Task[]>([]);
     public environments: Env[];
-    public envList: any;
-    public systems: System[];
+    public systems: System[] = [];
+    public systemsList: SystemList[];
     get tasks(): Task[] { return this.taskSource.value; }
 
     constructor(private httpClient: HttpClient) {
+        this.allLoad();
+    }
+    allLoad() {
         this.getAllData().subscribe(x => {
-            this.systems = x.systems;
+            this.taskSource.next([]);
+            this.systemsList = x.systems;
             this.environments = x.environments;
-            this.envList =  this.environments;
+            Object.keys(this.systemsList).map(sys => this.systems = this.systems.concat(this.systemsList[sys]));
             this.addTasks(x.data);
-            console.log(this.envList);
         });
     }
     /*
@@ -58,8 +61,8 @@ export class TaskService {
     createTask(data): Task {
         return {
             id: data.id,
-            environment: this.environments.filter(x => x.id == data.id_environment)[0].name,
-            methodname: data.method,
+            environment: this.environments.filter(x => x.id === data.id_environment)[0].name,
+            methodname: this.systems.filter(x => x.className === data.class_name)[0].description,
             progress: data.progress,
             created: data.created
         };
