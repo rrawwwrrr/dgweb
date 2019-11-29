@@ -1,0 +1,47 @@
+﻿<div class="example-container mat-elevation-z8">
+    <div class="example-loading-shade" *ngIf="isLoadingResults || isRateLimitReached">
+        <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+        <div class="example-rate-limit-reached" *ngIf="isRateLimitReached">
+
+        </div>
+    </div>
+
+    <div class="example-table-container">
+
+        <table mat-table [dataSource]="data" class="example-table" matSort matSortActive="created" matSortDisableClear
+            matSortDirection="desc">
+
+            <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef>ID</th>
+                <td mat-cell *matCellDef="let row">{{row.id}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="env">
+                <th mat-header-cell *matHeaderCellDef>Среда</th>
+                <td mat-cell *matCellDef="let row">{{row.env}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="method">
+                <th mat-header-cell *matHeaderCellDef>Метод</th>
+                <td mat-cell *matCellDef="let row">{{row.method}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="progress">
+                <th mat-header-cell *matHeaderCellDef>Прогресс</th>
+                <td mat-cell *matCellDef="let row">{{row.progress}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="created_by">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
+                    Дата
+                </th>
+                <td mat-cell *matCellDef="let row">{{row.created_at | date}}</td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </div>
+
+    <mat-paginator [length]="resultsLength" [pageSize]="30"></mat-paginator>
+</div>

@@ -1,0 +1,32 @@
+
+.loginForm{
+
+  width: 50%;
+  margin: 100px auto;
+  text-align: center;
+}
+.authForm{
+  width: 1024px;
+  margin: auto;
+}
+.dgweb-container {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .dgweb-container > * {
+    width: 100%;
+  }
+  .dgweb-form {
+    min-width: 150px;
+    max-width: 500px;
+    width: 100%;
+  }
+  
+  .dgweb-full-width {
+    width: 100%;
+  } 
+   .authSend{
+     margin: auto;
+    width: 30%;
+  }
