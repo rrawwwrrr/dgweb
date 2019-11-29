@@ -40,7 +40,7 @@ import {
   MatBadgeModule,
 } from '@angular/material';
 import { JwtInterceptor, ErrorInterceptor } from './_helpers';
-import { TasksComponent } from './tasks';
+import { TaskComponent } from './tasks';
 import { LoginComponent } from './login';
 
 @NgModule({
@@ -86,7 +86,7 @@ import { LoginComponent } from './login';
   ],
   declarations: [
     AppComponent,
-    TasksComponent,
+    TaskComponent,
     LoginComponent
   ],
   providers: [
