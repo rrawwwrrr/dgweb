@@ -41,7 +41,11 @@ export class TaskService {
         id_environment: 17
         modified: "2019-11-27T13:20:59.988+0000"
         name: "Создание договора НК"
-        parameters: "{"sellerplaceCode":"108976","creditAmount":"40000","finalStatus":"s","pumpCommMessages":"Нет","insuranceCodeList":"","isHomerSmsInformConnected":"Нет","repaymentMethod":"c","namedCardWithNoNameCard":"false","bic":"044525245","creditType":"SC","productType":"SC"}"
+        parameters:
+        "{"sellerplaceCode":"108976",
+        "creditAmount":"40000","finalStatus":"s","pumpCommMessages":"Нет","insuranceCodeList":"",
+        "isHomerSmsInformConnected":"Нет","repaymentMethod":"c",
+        "namedCardWithNoNameCard":"false","bic":"044525245","creditType":"SC","productType":"SC"}"
         periodicity: 15
         progress: "100.00% (18/0/18/18)"
         result: "ERROR"
@@ -59,11 +63,13 @@ export class TaskService {
     }
 
     createTask(data): Task {
+        const gdata = data.gdata;
+        console.table(gdata);
         return {
             id: data.id,
             environment: this.environments.filter(x => x.id === data.id_environment)[0].name,
             methodname: this.systems.filter(x => x.className === data.class_name)[0].description,
-            progress: data.progress,
+            progress: `${gdata.length}/${gdata.filter(x => x.data).length}/${gdata.filter(x => x.error).length}/${data.total}`,
             created: data.created
         };
     }
