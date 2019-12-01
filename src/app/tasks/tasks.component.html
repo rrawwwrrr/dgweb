@@ -1,13 +1,13 @@
 ﻿<div class="example-container mat-elevation-z8">
-    <div class="example-header">
-        <div class="button-row">
-          <button matTooltip="Новый" (click)="openDialogAdd()" mat-icon-button>
-            <mat-icon aria-label="add">add</mat-icon>
-          </button>
-          <button matTooltip="Редактировать" mat-icon-button mat-icon-button>
-            <mat-icon aria-label="edit">edit</mat-icon>
-          </button>
-          <button mat-icon-button [matMenuTriggerFor]="menu">
+  <div class="example-header">
+    <div class="button-row">
+    <button matTooltip="Новый" (click)="openDialogAdd()" mat-icon-button>
+        <mat-icon aria-label="add">add</mat-icon>
+      </button>
+     <button matTooltip="Редактировать" mat-icon-button mat-icon-button>
+        <mat-icon aria-label="edit">edit</mat-icon>
+      </button>
+     <button mat-icon-button [matMenuTriggerFor]="menu">
             <mat-icon>brush</mat-icon>
           </button>
           <mat-menu #menu="matMenu">
@@ -16,51 +16,51 @@
               <span></span>
             </button>
           </mat-menu>
-        </div>
-      </div>
-
-  <div class="example-loading-shade" *ngIf="loading.isLoadingResults || loading.isRateLimitReached">
-    <mat-spinner *ngIf="loading.isLoadingResults"></mat-spinner>
-    <div class="example-rate-limit-reached" *ngIf="loading.isRateLimitReached">
-      Что то пошло не по плану. Не могу получить данные с сервера.
     </div>
   </div>
-
-  <div class="tasks-table-container">
-
-    <table mat-table [dataSource]="dataSource" class="tasks-table" matSort matSortActive="created" matSortDisableClear
-      matSortDirection="desc">
-
-      <ng-container matColumnDef="id">
-        <th mat-header-cell *matHeaderCellDef>ID</th>
-        <td mat-cell *matCellDef="let row">{{row.id}}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="env">
-        <th mat-header-cell *matHeaderCellDef>Среда</th>
-        <td mat-cell *matCellDef="let row">{{row.environment}}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="method">
-        <th mat-header-cell *matHeaderCellDef>Метод</th>
-        <td mat-cell *matCellDef="let row">{{row.methodname}}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="progress">
-        <th mat-header-cell *matHeaderCellDef>Прогресс</th>
-        <td mat-cell *matCellDef="let row">{{row.progress}}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="created">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
-          Дата
-        </th>
-        <td mat-cell *matCellDef="let row">{{row.created | date:'dd.MM.yyyy   hh:mm'}}</td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
+</div>
+<!-- <div class="example-loading-shade" *ngIf="loading.isLoadingResults || loading.isRateLimitReached">
+  <mat-spinner *ngIf="loading.isLoadingResults"></mat-spinner>
+  <div class="example-rate-limit-reached" *ngIf="loading.isRateLimitReached">
+    Что то пошло не по плану. Не могу получить данные с сервера.
   </div>
-  <mat-paginator [pageSizeOptions]="[25, 50, 100]" showFirstLastButtons></mat-paginator>
+</div> -->
+
+<div class="tasks-table-container">
+
+  <table mat-table [dataSource]="dataSource" class="tasks-table" matSort matSortActive="created" matSortDisableClear
+    matSortDirection="desc">
+
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef>ID</th>
+      <td mat-cell *matCellDef="let row">{{row.id}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="env">
+      <th mat-header-cell *matHeaderCellDef>Среда</th>
+      <td mat-cell *matCellDef="let row">{{row.environment}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="method">
+      <th mat-header-cell *matHeaderCellDef>Метод</th>
+      <td mat-cell *matCellDef="let row">{{row.methodname}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="progress">
+      <th mat-header-cell *matHeaderCellDef>Прогресс</th>
+      <td mat-cell *matCellDef="let row">{{row.progress}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="created">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
+        Дата
+      </th>
+      <td mat-cell *matCellDef="let row">{{row.created | date:'dd.MM.yyyy hh:mm'}}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+  <mat-paginator #paginator [pageSizeOptions]="taskService.pages.sizeOptions" [length]="taskService.pages.dataLength"
+    [pageSize]="taskService.pages.size" showFirstLastButtons></mat-paginator>
 </div>

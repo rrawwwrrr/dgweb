@@ -4,3 +4,4 @@ export * from './initdata';
 export * from './environment';
 export * from './system';
 export * from './systemlist';
+export * from './gendata';

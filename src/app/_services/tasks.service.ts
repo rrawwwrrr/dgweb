@@ -1,13 +1,20 @@
 import { HttpClient } from '@angular/common/http';
-import { Task, InitData, Env, System, SystemList } from '../_models';
+import { MatPaginator, MatSort } from '@angular/material';
+import { Task, InitData, Env, System, SystemList, GenData } from '../_models';
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
+
 
 @Injectable()
 export class TaskService {
     private host = environment.apiUrl;
     public taskSource: BehaviorSubject<Task[]> = new BehaviorSubject<Task[]>([]);
+    public pages = {
+        size: 25,
+        sizeOptions: [25, 50, 75, 100],
+        dataLength: 0
+    };
     public environments: Env[];
     public systems: System[] = [];
     public systemsList: SystemList[];
@@ -16,74 +23,54 @@ export class TaskService {
     constructor(private httpClient: HttpClient) {
         this.allLoad();
     }
-    allLoad() {
+
+    public allLoad() {
         this.getAllData().subscribe(x => {
             this.taskSource.next([]);
             this.systemsList = x.systems;
             this.environments = x.environments;
             Object.keys(this.systemsList).map(sys => this.systems = this.systems.concat(this.systemsList[sys]));
             this.addTasks(x.data);
+            this.pages.dataLength = x.count;
         });
     }
-    /*
-        active: false
-        class_name: "ru.homecredit.at.datagenerator.rest.systems.homer.HomerContractSC"
-        count: 18
-        count_generation: 3
-        count_launch: 6
-        created: "2019-11-27T11:54:46.078+0000"
-        created_by: "aalyamkina@homecredit.ru"
-        environment: "RT"
-        finished: "2020-11-26T11:54:51.000+0000"
-        hidden: false
-        host: "OS-3213"
-        id: 927
-        id_environment: 17
-        modified: "2019-11-27T13:20:59.988+0000"
-        name: "Создание договора НК"
-        parameters:
-        "{"sellerplaceCode":"108976",
-        "creditAmount":"40000","finalStatus":"s","pumpCommMessages":"Нет","insuranceCodeList":"",
-        "isHomerSmsInformConnected":"Нет","repaymentMethod":"c",
-        "namedCardWithNoNameCard":"false","bic":"044525245","creditType":"SC","productType":"SC"}"
-        periodicity: 15
-        progress: "100.00% (18/0/18/18)"
-        result: "ERROR"
-        started: "2019-11-27T11:54:51.000+0000"
-        status: "ERROR"
-        taken: false
-        total: 18
-        worked: false
-    */
 
     addTasks(data: any) {
         const copiedData = this.tasks.slice();
         data.forEach(element => copiedData.push(this.createTask(element)));
         this.taskSource.next(copiedData);
     }
-
     createTask(data): Task {
         const gdata = data.gdata;
-        console.table(gdata);
+        const progress = gdata
+            ? `${gdata.length}/${gdata.filter(x => x.data).length}/${gdata.filter(x => x.error).length}/${data.total}`
+            : '0/0/0/0';
         return {
             id: data.id,
             environment: this.environments.filter(x => x.id === data.id_environment)[0].name,
             methodname: this.systems.filter(x => x.className === data.class_name)[0].description,
-            progress: `${gdata.length}/${gdata.filter(x => x.data).length}/${gdata.filter(x => x.error).length}/${data.total}`,
+            progress,
             created: data.created
         };
     }
+    getTasks(paginator: MatPaginator, sort: MatSort) {
+        this.taskSource.next([]);
+        const option = this.getGetRequestOption(paginator, sort);
+        this.getTasksRequest(option).subscribe(tasks => this.addTasks(tasks));
+    }
 
     getAllData() {
-        const href = `${this.host}/api/data`;
+        const href = `${this.host}/api/data/getdata`;
         return this.httpClient.get<InitData>(href);
     }
 
-    getData(sort: string, order: string, page: number): Observable<InitData> {
-        const href = `${this.host}/api/data`;
-        const requestUrl = '';
-        // `${href}?q=repo:angular/components&sort=${sort}&order=${order}&page=${page + 1}`;
-
-        return this.httpClient.get<InitData>(requestUrl);
+    getTasksRequest(param: string): Observable<InitData> {
+        const href = `${this.host}/api/data/gettasks/${param}`;
+        return this.httpClient.get<InitData>(href);
     }
+
+    getGetRequestOption(paginator: MatPaginator, sort: MatSort): string {
+        return `?sortActive=${sort.active}&sortOrder=${sort.direction}&pageIndex=${paginator.pageIndex}&pageSize=${paginator.pageSize}`;
+    }
+
 }
