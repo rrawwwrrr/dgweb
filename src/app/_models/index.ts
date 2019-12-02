@@ -5,3 +5,4 @@ export * from './environment';
 export * from './system';
 export * from './systemlist';
 export * from './gendata';
+export * from './dialogdata';

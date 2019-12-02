@@ -41,6 +41,7 @@ import {
 } from '@angular/material';
 import { JwtInterceptor, ErrorInterceptor } from './_helpers';
 import { TaskComponent } from './tasks';
+import { NewTaskDialogComponent } from './tasks/new/newtask.component';
 import { LoginComponent } from './login';
 
 @NgModule({
@@ -87,8 +88,10 @@ import { LoginComponent } from './login';
   declarations: [
     AppComponent,
     TaskComponent,
-    LoginComponent
+    LoginComponent,
+    NewTaskDialogComponent
   ],
+  entryComponents: [TaskComponent, NewTaskDialogComponent],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },

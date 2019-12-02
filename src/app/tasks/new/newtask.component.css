@@ -1,0 +1,9 @@
+.system-container{
+    width: 45%;
+}
+.system-container mat-form-field{
+    width: 100%;
+}
+.system-container mat-form-field-wrapper *{
+    width: 50%;
+}

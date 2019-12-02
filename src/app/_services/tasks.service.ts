@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { MatPaginator, MatSort } from '@angular/material';
-import { Task, InitData, Env, System, SystemList, GenData } from '../_models';
+import { Task, InitData, Env, System, SystemList } from '../_models';
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';

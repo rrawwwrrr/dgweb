@@ -1,0 +1,26 @@
+<h1 mat-dialog-title></h1>
+<div mat-dialog-content>
+    <form class="system-container" [formGroup]="meForm">
+        <mat-form-field>
+            <mat-select placeholder="Среда" formControlName="environment">
+                <mat-option *ngFor="let env of data.environments" [value]="env.id">{{env.name}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-select placeholder="Система" formControlName="system">
+                <mat-option *ngFor="let system of systems" [value]="system">{{system}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+                <mat-select placeholder="Метод" formControlName="method">
+                    <mat-option *ngFor="let method of data.systemList[system]" [value]="method.className">{{method.description}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+    </form>
+</div>
+<div mat-dialog-actions>
+    <button mat-button (click)="onNoClick()">No Thanks</button>
+    <button mat-button (click)="confirmSelection()" cdkFocusInitial>Ok</button>
+</div>

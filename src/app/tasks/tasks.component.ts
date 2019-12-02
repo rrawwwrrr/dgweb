@@ -1,11 +1,12 @@
 ﻿import { Component, ViewChild, AfterViewInit, OnInit } from '@angular/core';
-import { MatPaginator, MatSort } from '@angular/material';
+import { MatPaginator, MatSort, MatDialog } from '@angular/material';
 import { merge, Observable } from 'rxjs';
 import { map, startWith, switchMap } from 'rxjs/operators';
 import { UserService, AuthenticationService, TaskService } from 'src/app/_services';
 import { Task } from '../_models';
 import { DataSource } from '@angular/cdk/collections';
 import { Loading } from '../_models/loading';
+import { NewTaskDialogComponent } from './new/newtask.component';
 
 @Component({
     templateUrl: 'tasks.component.html',
@@ -20,7 +21,7 @@ export class TaskComponent implements OnInit, AfterViewInit {
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
 
-    constructor(public taskService: TaskService) { }
+    constructor(public taskService: TaskService, public dialog: MatDialog) { }
 
     ngOnInit() {
         this.dataSource = new TaskDataSource(this.taskService, this.loading);
@@ -29,6 +30,18 @@ export class TaskComponent implements OnInit, AfterViewInit {
     ngAfterViewInit() {
         merge(this.paginator.page, this.sort.sortChange).subscribe(() => {
             this.taskService.getTasks(this.paginator, this.sort);
+        });
+    }
+
+    openDialogNew(): void {
+        const dialogRef = this.dialog.open(NewTaskDialogComponent, {
+            width: '90%',
+            data: { systemsList: Object.assign({}, this.taskService.systemsList), environments: this.taskService.environments.slice() }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            console.table(result);
+            console.log('The dialog was closed');
         });
     }
 }
