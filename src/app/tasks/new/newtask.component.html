@@ -1,23 +1,37 @@
 <h1 mat-dialog-title></h1>
 <div mat-dialog-content>
-    <form class="system-container" [formGroup]="meForm">
-        <mat-form-field>
-            <mat-select placeholder="Среда" formControlName="environment">
-                <mat-option *ngFor="let env of data.environments" [value]="env.id">{{env.name}}</mat-option>
-            </mat-select>
-        </mat-form-field>
-
-        <mat-form-field>
-            <mat-select placeholder="Система" formControlName="system">
-                <mat-option *ngFor="let system of systems" [value]="system">{{system}}</mat-option>
-            </mat-select>
-        </mat-form-field>
-
-        <mat-form-field>
-                <mat-select placeholder="Метод" formControlName="method">
-                    <mat-option *ngFor="let method of data.systemList[system]" [value]="method.className">{{method.description}}</mat-option>
+    <form [formGroup]="meForm">
+        <div class="system-container">
+            <mat-form-field>
+                <mat-select placeholder="Среда" formControlName="environment">
+                    <mat-option *ngFor="let env of data.environments" [value]="env.id">{{env.name}}</mat-option>
                 </mat-select>
             </mat-form-field>
+
+            <mat-form-field>
+                <mat-select placeholder="Система" formControlName="system">
+                    <mat-option *ngFor="let system of systems" [value]="system">{{system}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-select placeholder="Метод" formControlName="method">
+                    <mat-option *ngFor="let method of methodList" [value]="method">{{method.description}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="system-container">
+            <fieldset *ngIf="meForm.controls['method'].value" formArrayName="formData">
+                <div *ngFor="let item of meForm.controls['formData'].controls; let i = index">
+                     <mat-form-field>
+                        <mat-select placeholder="Среда" [formControl]="item.controls['value']">
+                            <!-- <mat-option *ngFor="let env of data.environments" [value]="env.id">{{env.name}}</mat-option> -->
+                        </mat-select>
+                    </mat-form-field> 
+                </div>
+            </fieldset>
+        </div>
     </form>
 </div>
 <div mat-dialog-actions>

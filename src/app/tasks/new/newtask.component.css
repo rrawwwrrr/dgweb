@@ -1,5 +1,7 @@
 .system-container{
     width: 45%;
+    float: left;
+    margin-right: 5%;
 }
 .system-container mat-form-field{
     width: 100%;
