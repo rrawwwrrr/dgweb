@@ -1,7 +1,7 @@
-import { System, Env } from './index';
-import { SystemList } from './systemlist';
+import { Env, Parameter, SystemList } from './index';
 
 export class DialogData {
     environments: Env[];
     systemsList: SystemList[];
+    parameters: Parameter[];
 }

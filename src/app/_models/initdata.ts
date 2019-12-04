@@ -1,9 +1,10 @@
-import { Task, Env, SystemList,GenData } from './index';
+import { Task, Env, SystemList, GenData, Parameter } from './index';
 
 export class InitData {
     data: Task[];
     count: number;
-    gdata:GenData
+    gdata: GenData[];
     environments: Env[];
     systems: SystemList[];
+    parameters: Parameter[];
 }

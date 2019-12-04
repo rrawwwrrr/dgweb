@@ -18,12 +18,11 @@ export class NewTaskDialogComponent implements OnInit {
         @Inject(MAT_DIALOG_DATA) public data: DialogData, private fb: FormBuilder) {
         this.data = data;
         this.systems = Object.keys(data.systemsList);
-        console.log(data);
         this.meForm = fb.group({
             environment: new FormControl(),
             system: new FormControl(),
             method: new FormControl(),
-            formData: new FormArray([]),
+            methodData: new FormArray([]),
             // phone: new FormControl(),
             // email: new FormControl(),
             // femail: new FormControl(),
@@ -42,13 +41,23 @@ export class NewTaskDialogComponent implements OnInit {
         this.meForm.get('method').valueChanges.subscribe((x: System) => {
             // console.log(x.methodParameters);
             x.methodParameters.map(mparam => {
-                (this.meForm.get('formData') as FormArray).push(new FormGroup({
-                    type: new FormControl(mparam.name),
-                    value: new FormControl(mparam.required)
+                const isselect = this.data.parameters[mparam.name].values ? true : false; // mparam.name.endsWith('List');
+                // const value = isselect ? this.data.parameters[mparam.name].values : '';
+                const value = isselect ? Object.keys(this.data.parameters[mparam.name].values).map(key => {
+                    return { value: key, view: this.data.parameters[mparam.name].values[key] };
+                }) : '';
+                console.log(value);
+                // console.table(this.data.parameters[mparam.name]);
+                (this.meForm.get('methodData') as FormArray).push(new FormGroup({
+                    title: new FormControl(this.data.parameters[mparam.name].description),
+                    name: new FormControl(mparam.name),
+                    required: new FormControl(mparam.required),
+                    isSelect: new FormControl(isselect),
+                    values: new FormControl(value),
                 }));
             });
         });
-        this.meForm.get('formData').valueChanges.subscribe((x: string) => {
+        this.meForm.get('methodData').valueChanges.subscribe((x: string) => {
             console.table(x);
         });
     }

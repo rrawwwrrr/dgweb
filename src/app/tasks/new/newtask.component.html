@@ -22,11 +22,11 @@
             </mat-form-field>
         </div>
         <div class="system-container">
-            <fieldset *ngIf="meForm.controls['method'].value" formArrayName="formData">
-                <div *ngFor="let item of meForm.controls['formData'].controls; let i = index">
-                     <mat-form-field>
-                        <mat-select placeholder="Среда" [formControl]="item.controls['value']">
-                            <!-- <mat-option *ngFor="let env of data.environments" [value]="env.id">{{env.name}}</mat-option> -->
+            <fieldset *ngIf="meForm.controls['method'].value" formArrayName="methodData">
+                <div *ngFor="let item of meForm.controls['methodData'].controls; let i = index">
+                     <mat-form-field  *ngIf="item.controls['isSelect'].value"> 
+                        <mat-select placeholder="{{item.controls['title'].value}}" [formControl]="item.controls['values']">
+                            <mat-option *ngFor="let val of item.controls['values'].controls" [value]="val.value">{{val.view}}</mat-option>
                         </mat-select>
                     </mat-form-field> 
                 </div>

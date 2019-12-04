@@ -1,9 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { MatPaginator, MatSort } from '@angular/material';
-import { Task, InitData, Env, System, SystemList } from '../_models';
+import { Task, InitData, Env, System, SystemList, Parameter } from '../_models';
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
+
 
 
 @Injectable()
@@ -18,6 +19,7 @@ export class TaskService {
     public environments: Env[];
     public systems: System[] = [];
     public systemsList: SystemList[];
+    public parameters: Parameter[];
     get tasks(): Task[] { return this.taskSource.value; }
 
     constructor(private httpClient: HttpClient) {
@@ -32,6 +34,8 @@ export class TaskService {
             Object.keys(this.systemsList).map(sys => this.systems = this.systems.concat(this.systemsList[sys]));
             this.addTasks(x.data);
             this.pages.dataLength = x.count;
+            this.parameters = x.parameters;
+            console.log(x);
         });
     }
 
