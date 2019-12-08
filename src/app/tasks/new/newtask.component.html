@@ -16,25 +16,39 @@
 
             <mat-form-field>
                 <mat-select placeholder="Метод" formControlName="method">
-                    <mat-option *ngFor="let method of methodList" [value]="method">{{method.description}}
+                    <mat-option *ngFor="let method of methodList" [value]="method.path">{{method.description}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
         </div>
         <div class="system-container">
             <fieldset *ngIf="meForm.controls['method'].value" formArrayName="methodData">
-                <div *ngFor="let item of meForm.controls['methodData'].controls; let i = index">
+                <mat-form-field *ngFor="let item of meForm.controls['methodData'].controls; let i = index"
+                    [ngSwitch]="methodDataList[i].type">
+
+                    <input *ngSwitchCase="'String'" matInput placeholder="{{methodDataList[i].title}}">
+
+                    <mat-select *ngSwitchCase="'List'" placeholder="{{methodDataList[i].title}} "
+                        [formControl]="item.controls['value']">
+                        <mat-option *ngFor="let val of methodDataList[i].values" [value]="val.value">
+                            {{val.text}}</mat-option>
+                    </mat-select>
+
+                    <input *ngSwitchDefault matInput placeholder="{{methodDataList[i].title}}">
+
+                </mat-form-field>
+                <!-- <div *ngFor="let item of meForm.controls['methodData'].controls; let i = index">
                      <mat-form-field  *ngIf="item.controls['isSelect'].value"> 
                         <mat-select placeholder="{{item.controls['title'].value}}" [formControl]="item.controls['values']">
                             <mat-option *ngFor="let val of item.controls['values'].controls" [value]="val.value">{{val.view}}</mat-option>
                         </mat-select>
                     </mat-form-field> 
-                </div>
-            </fieldset> 
+                </div> -->
+            </fieldset>
         </div>
     </form>
 </div>
 <div mat-dialog-actions>
-    <button mat-button (click)="onNoClick()">No Thanks</button>
-    <button mat-button (click)="confirmSelection()" cdkFocusInitial>Ok</button>
+    <button mat-button (click)="onNoClick()">уходим</button>
+    <button mat-button (click)="confirmSelection()" cdkFocusInitial>ок</button>
 </div>

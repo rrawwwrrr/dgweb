@@ -34,9 +34,30 @@ export class TaskService {
             Object.keys(this.systemsList).map(sys => this.systems = this.systems.concat(this.systemsList[sys]));
             this.addTasks(x.data);
             this.pages.dataLength = x.count;
-            this.parameters = x.parameters;
-            console.log(x);
+            this.parameters = this.addParameters(x.parameters);
         });
+    }
+
+    addParameters(data: Parameter[]): Parameter[] {
+        const reqexpPachage = /[A-Za-z]+\./gi;
+        Object.keys(data).map(x => {
+            data[x].type = data[x].type.replace(reqexpPachage, '');
+            if (data[x].type === 'List' && data[x].name.endsWith('List')) {
+                data[x].values = data[data[x].name.slice(0, -4)].values;
+            }
+            if (data[x].values) {
+                const vals = Object.assign(data[x].values);
+                const copyValue = [];
+                Object.keys(vals).map(value => {
+                    copyValue.push({
+                        value,
+                        text: vals[value]
+                    });
+                });
+                data[x].valuesList = copyValue.slice();
+            }
+        });
+        return data;
     }
 
     addTasks(data: any) {
@@ -76,5 +97,4 @@ export class TaskService {
     getGetRequestOption(paginator: MatPaginator, sort: MatSort): string {
         return `?sortActive=${sort.active}&sortOrder=${sort.direction}&pageIndex=${paginator.pageIndex}&pageSize=${paginator.pageSize}`;
     }
-
 }

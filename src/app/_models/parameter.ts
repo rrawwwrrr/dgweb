@@ -4,5 +4,7 @@ export class Parameter {
     name: string;
     regexp: string;
     type: string;
-    values: string;
+    values: object;
+    valuesList: [{ text: string, value: string }];
+    isList: boolean;
 }
