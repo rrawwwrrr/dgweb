@@ -3,10 +3,15 @@
   margin-right: 5%;
 } */
 
-.newtask-left-container,
+.newtask-left-container {
+  display: inline-grid;
+  width: 35%;
+  margin-right: 5%;
+}
+
 .newtask-right-container {
   display: inline-grid;
-  width: 45%;
+  width: 55%;
   margin-right: 5%;
 }
 
@@ -29,7 +34,13 @@
 .param-launch-radio :last-child {
   margin-left: 40%;
 }
+
 .param-launch mat-form-field {
-    display: inline-grid;
-    width: 30%;
-  }
+  display: inline-grid;
+  width: 30%;
+  margin-top: 20px;
+}
+
+.param-launch h2 {
+  text-align: center;
+}

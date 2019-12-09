@@ -27,6 +27,11 @@ export class NewTaskDialogComponent implements OnInit {
             methodData: new FormArray([]),
             launch: fb.group({
                 type: new FormControl('i', Validators.required),
+                genCount: new FormControl(1, Validators.min(1)),
+                launchCount: new FormControl(1, Validators.min(1)),
+                periodicity: new FormControl(1, Validators.min(1)),
+                timeStart: new FormControl(new Date(), Validators.required),
+                timeStop: new FormControl(new Date(), Validators.required),
             })
         });
     }
@@ -38,15 +43,24 @@ export class NewTaskDialogComponent implements OnInit {
             (this.meForm.get('methodData') as FormArray).clear();
             this.methodDataList = this.methodList.filter(x => x.path === method)[0].methodParameters
                 .map(sysParam => {
+                    const valids = [];
                     const param = Object.assign(sysParam, this.data.parameters[sysParam.name]);
+                    if (param.required || param.regexp) { console.table(param); }
+                    if (param.required) {
+                        valids.push(Validators.required);
+                    }
+                    if (param.regexp) {
+                        valids.push(Validators.pattern(param.regexp));
+                    }
                     (this.meForm.get('methodData') as FormArray).push(new FormGroup({
                         name: new FormControl(param.name),
-                        value: new FormControl(''),
+                        value: new FormControl('', valids)
                     }));
                     return {
                         title: param.description,
                         name: param.name,
                         required: param.required,
+                        regexp: param.regexp,
                         values: this.data.parameters[sysParam.name].valuesList,
                         type: param.type
                     };
@@ -63,7 +77,7 @@ export class NewTaskDialogComponent implements OnInit {
     }
     confirmSelection(): void {
         const form = this.meForm.value;
-        console.log(form);
+        console.log(form.methodData);
         // this.dialogRef.close(form);
     }
 }

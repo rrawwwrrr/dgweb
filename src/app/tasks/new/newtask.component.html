@@ -7,12 +7,14 @@
           <mat-select placeholder="Среда" formControlName="environment">
             <mat-option *ngFor="let env of data.environments" [value]="env.id">{{env.name}}</mat-option>
           </mat-select>
+          <mat-error *ngIf="meForm.controls.environment.invalid">Обязательно для заполнения</mat-error>
         </mat-form-field>
 
         <mat-form-field>
           <mat-select placeholder="Система" formControlName="system">
             <mat-option *ngFor="let system of systems" [value]="system">{{system}}</mat-option>
           </mat-select>
+          <mat-error *ngIf="meForm.controls.system.invalid">Обязательно для заполнения</mat-error>
         </mat-form-field>
 
         <mat-form-field>
@@ -20,27 +22,33 @@
             <mat-option *ngFor="let method of methodList" [value]="method.path">{{method.description}}
             </mat-option>
           </mat-select>
+          <mat-error *ngIf="meForm.controls.method.invalid">Обязательно для заполнения</mat-error>
         </mat-form-field>
       </div>
       <div class="system-container param-launch" formGroupName="launch">
+        <h2>Параметры запуска</h2>
         <mat-radio-group class="param-launch-radio" formControlName="type" aria-label="Параметры запуска">
           <mat-radio-button value="i">Единоразово</mat-radio-button>
           <mat-radio-button value="p">Переодически</mat-radio-button>
+
         </mat-radio-group>
         <mat-form-field *ngIf="meForm.controls.launch.controls.type.value === 'p'">
-          <input type="number" matInput placeholder="Запусков">
+          <input type="number" formControlName="launchCount" matInput placeholder="Запусков">
+          <mat-error *ngIf="meForm.controls.launch.controls.launchCount.invalid">Должно быть число, больше 0</mat-error>
         </mat-form-field>
         <mat-form-field>
-          <input type="number" matInput placeholder="Генераций">
+          <input type="number" formControlName="genCount" matInput placeholder="Генераций">
+          <mat-error *ngIf="meForm.controls.launch.controls.genCount.invalid">Должно быть число, больше 0</mat-error>
         </mat-form-field>
         <mat-form-field *ngIf="meForm.controls.launch.controls.type.value === 'p'">
-          <input type="number" matInput placeholder="Периодичность(мин)">
+          <input type="number" formControlName="periodicity" matInput placeholder="Периодичность(мин)">
+          <mat-error *ngIf="meForm.controls.launch.controls.periodicity.invalid">Должно быть число, больше 0</mat-error>
         </mat-form-field>
         <mat-form-field *ngIf="meForm.controls.launch.controls.type.value === 'p'">
-          <input matInput type="datetime-local" placeholder="Дата начала">
+          <input matInput formControlName="timeStart" type="datetime-local" placeholder="Дата начала">
         </mat-form-field>
         <mat-form-field *ngIf="meForm.controls.launch.controls.type.value === 'p'">
-          <input matInput type="datetime-local" placeholder="Дата окончания">
+          <input matInput formControlName="timeStop" type="datetime-local" placeholder="Дата окончания">
         </mat-form-field>
         <!-- <mat-form-field *ngIf="meForm.controls.launch.controls.type.value === 'p'">
           <input matInput placeholder="Время начала">
@@ -56,8 +64,6 @@
         <fieldset *ngIf="meForm.controls['method'].value" formArrayName="methodData">
           <mat-form-field *ngFor="let item of meForm.controls['methodData'].controls; let i = index"
             [ngSwitch]="methodDataList[i].type">
-
-            <input *ngSwitchCase="'String'" matInput placeholder="{{methodDataList[i].title}}">
             <mat-select *ngSwitchCase="'Array'" placeholder="{{methodDataList[i].title}}"
               [formControl]="item.controls['value']">
               <mat-option *ngFor="let val of methodDataList[i].values" [value]="val.value">
@@ -77,8 +83,20 @@
               <mat-option value="false">Нет</mat-option>
             </mat-select>
 
-            <input *ngSwitchDefault matInput placeholder="{{methodDataList[i].title}}">
+            <input *ngSwitchCase="'Integer'" [formControl]="item.controls['value']" type="text" matInput
+              placeholder="{{methodDataList[i].title}}">
 
+            <input *ngSwitchCase="'BigDecimal'" [formControl]="item.controls['value']" type="text" matInput
+              placeholder="{{methodDataList[i].title}}">
+
+            <input *ngSwitchDefault matInput [formControl]="item.controls.value" placeholder="{{methodDataList[i].title}}">
+
+
+            <!-- <mat-error *ngIf="item.controls['value'].invalid">ошибка</mat-error> -->
+            <mat-error *ngIf="item.controls['value'].hasError('required')">Поле должно соответсвовать /<strong>{{methodDataList[i].regexp}}/</strong>
+            </mat-error>
+            <mat-error *ngIf="item.controls['value'].hasError('pattern')">Поле должно быть<strong>заполнено</strong>
+            </mat-error>
           </mat-form-field>
         </fieldset>
       </div>
