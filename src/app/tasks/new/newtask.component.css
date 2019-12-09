@@ -1,11 +1,35 @@
-.system-container{
-    width: 45%;
-    float: left;
-    margin-right: 5%;
+/* .system-container {
+  width: 45%;
+  margin-right: 5%;
+} */
+
+.newtask-left-container,
+.newtask-right-container {
+  display: inline-grid;
+  width: 45%;
+  margin-right: 5%;
 }
-.system-container mat-form-field{
-    width: 100%;
+
+.system-container mat-form-field {
+  width: 100%;
 }
-.system-container mat-form-field-wrapper *{
-    width: 50%;
+
+.system-container mat-form-field-wrapper * {
+  width: 90%;
 }
+
+/* .newtask-left-container {
+  width: 30%;
+} */
+
+.newtask-left-container div {
+  display: contents;
+}
+
+.param-launch-radio :last-child {
+  margin-left: 40%;
+}
+.param-launch mat-form-field {
+    display: inline-grid;
+    width: 30%;
+  }

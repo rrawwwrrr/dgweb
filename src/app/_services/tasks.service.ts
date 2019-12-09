@@ -45,6 +45,9 @@ export class TaskService {
             if (data[x].type === 'List' && data[x].name.endsWith('List')) {
                 data[x].values = data[data[x].name.slice(0, -4)].values;
             }
+            if(data[x].type === 'String' && data[x].values){
+                data[x].type = 'Array'; 
+            }
             if (data[x].values) {
                 const vals = Object.assign(data[x].values);
                 const copyValue = [];
@@ -56,7 +59,9 @@ export class TaskService {
                 });
                 data[x].valuesList = copyValue.slice();
             }
+            
         });
+        console.table(data);
         return data;
     }
 

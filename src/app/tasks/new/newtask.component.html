@@ -1,54 +1,91 @@
 <h1 mat-dialog-title></h1>
 <div mat-dialog-content>
-    <form [formGroup]="meForm">
-        <div class="system-container">
-            <mat-form-field>
-                <mat-select placeholder="Среда" formControlName="environment">
-                    <mat-option *ngFor="let env of data.environments" [value]="env.id">{{env.name}}</mat-option>
-                </mat-select>
-            </mat-form-field>
+  <form [formGroup]="meForm" class="newtask-form-container">
+    <div class="newtask-left-container">
+      <div class="system-container">
+        <mat-form-field>
+          <mat-select placeholder="Среда" formControlName="environment">
+            <mat-option *ngFor="let env of data.environments" [value]="env.id">{{env.name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
 
-            <mat-form-field>
-                <mat-select placeholder="Система" formControlName="system">
-                    <mat-option *ngFor="let system of systems" [value]="system">{{system}}</mat-option>
-                </mat-select>
-            </mat-form-field>
+        <mat-form-field>
+          <mat-select placeholder="Система" formControlName="system">
+            <mat-option *ngFor="let system of systems" [value]="system">{{system}}</mat-option>
+          </mat-select>
+        </mat-form-field>
 
-            <mat-form-field>
-                <mat-select placeholder="Метод" formControlName="method">
-                    <mat-option *ngFor="let method of methodList" [value]="method.path">{{method.description}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
-        <div class="system-container">
-            <fieldset *ngIf="meForm.controls['method'].value" formArrayName="methodData">
-                <mat-form-field *ngFor="let item of meForm.controls['methodData'].controls; let i = index"
-                    [ngSwitch]="methodDataList[i].type">
+        <mat-form-field>
+          <mat-select placeholder="Метод" formControlName="method">
+            <mat-option *ngFor="let method of methodList" [value]="method.path">{{method.description}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="system-container param-launch" formGroupName="launch">
+        <mat-radio-group class="param-launch-radio" formControlName="type" aria-label="Параметры запуска">
+          <mat-radio-button value="i">Единоразово</mat-radio-button>
+          <mat-radio-button value="p">Переодически</mat-radio-button>
+        </mat-radio-group>
+        <mat-form-field *ngIf="meForm.controls.launch.controls.type.value === 'p'">
+          <input type="number" matInput placeholder="Запусков">
+        </mat-form-field>
+        <mat-form-field>
+          <input type="number" matInput placeholder="Генераций">
+        </mat-form-field>
+        <mat-form-field *ngIf="meForm.controls.launch.controls.type.value === 'p'">
+          <input type="number" matInput placeholder="Периодичность(мин)">
+        </mat-form-field>
+        <mat-form-field *ngIf="meForm.controls.launch.controls.type.value === 'p'">
+          <input matInput type="datetime-local" placeholder="Дата начала">
+        </mat-form-field>
+        <mat-form-field *ngIf="meForm.controls.launch.controls.type.value === 'p'">
+          <input matInput type="datetime-local" placeholder="Дата окончания">
+        </mat-form-field>
+        <!-- <mat-form-field *ngIf="meForm.controls.launch.controls.type.value === 'p'">
+          <input matInput placeholder="Время начала">
+        </mat-form-field>
+        <mat-form-field *ngIf="meForm.controls.launch.controls.type.value === 'p'">
+          <input matInput placeholder="Время окончания">
+        </mat-form-field> -->
 
-                    <input *ngSwitchCase="'String'" matInput placeholder="{{methodDataList[i].title}}">
+      </div>
+    </div>
+    <div class="newtask-right-container">
+      <div class="system-container">
+        <fieldset *ngIf="meForm.controls['method'].value" formArrayName="methodData">
+          <mat-form-field *ngFor="let item of meForm.controls['methodData'].controls; let i = index"
+            [ngSwitch]="methodDataList[i].type">
 
-                    <mat-select *ngSwitchCase="'List'" placeholder="{{methodDataList[i].title}} "
-                        [formControl]="item.controls['value']">
-                        <mat-option *ngFor="let val of methodDataList[i].values" [value]="val.value">
-                            {{val.text}}</mat-option>
-                    </mat-select>
+            <input *ngSwitchCase="'String'" matInput placeholder="{{methodDataList[i].title}}">
+            <mat-select *ngSwitchCase="'Array'" placeholder="{{methodDataList[i].title}}"
+              [formControl]="item.controls['value']">
+              <mat-option *ngFor="let val of methodDataList[i].values" [value]="val.value">
+                {{val.text}}</mat-option>
+            </mat-select>
 
-                    <input *ngSwitchDefault matInput placeholder="{{methodDataList[i].title}}">
+            <mat-select *ngSwitchCase="'List'" multiple placeholder="{{methodDataList[i].title}}"
+              [formControl]="item.controls['value']">
+              <mat-option *ngFor="let val of methodDataList[i].values" [value]="val.value">
+                {{val.text}}</mat-option>
+            </mat-select>
 
-                </mat-form-field>
-                <!-- <div *ngFor="let item of meForm.controls['methodData'].controls; let i = index">
-                     <mat-form-field  *ngIf="item.controls['isSelect'].value"> 
-                        <mat-select placeholder="{{item.controls['title'].value}}" [formControl]="item.controls['values']">
-                            <mat-option *ngFor="let val of item.controls['values'].controls" [value]="val.value">{{val.view}}</mat-option>
-                        </mat-select>
-                    </mat-form-field> 
-                </div> -->
-            </fieldset>
-        </div>
-    </form>
+            <mat-select *ngSwitchCase="'Boolean'" placeholder="{{methodDataList[i].title}}"
+              [formControl]="item.controls['value']">
+              <mat-option>Не определено</mat-option>
+              <mat-option value="true">Да</mat-option>
+              <mat-option value="false">Нет</mat-option>
+            </mat-select>
+
+            <input *ngSwitchDefault matInput placeholder="{{methodDataList[i].title}}">
+
+          </mat-form-field>
+        </fieldset>
+      </div>
+    </div>
+  </form>
 </div>
 <div mat-dialog-actions>
-    <button mat-button (click)="onNoClick()">уходим</button>
-    <button mat-button (click)="confirmSelection()" cdkFocusInitial>ок</button>
+  <button mat-button (click)="onNoClick()">уходим</button>
+  <button mat-button (click)="confirmSelection()" cdkFocusInitial>ок</button>
 </div>

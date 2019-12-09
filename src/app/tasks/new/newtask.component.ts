@@ -14,6 +14,7 @@ export class NewTaskDialogComponent implements OnInit {
     meForm: FormGroup;
     methodList: System[];
     methodDataList: any[];
+    parametersLaunch: any[];
     constructor(
         public dialogRef: MatDialogRef<NewTaskDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: DialogData, private fb: FormBuilder) {
@@ -23,7 +24,10 @@ export class NewTaskDialogComponent implements OnInit {
             environment: new FormControl('', Validators.required),
             system: new FormControl('', Validators.required),
             method: new FormControl('', Validators.required),
-            methodData: new FormArray([])
+            methodData: new FormArray([]),
+            launch: fb.group({
+                type: new FormControl('i', Validators.required),
+            })
         });
     }
     ngOnInit(): void {
@@ -31,12 +35,13 @@ export class NewTaskDialogComponent implements OnInit {
             this.methodList = this.data.systemsList[system];
         });
         this.meForm.get('method').valueChanges.subscribe((method: string) => {
+            (this.meForm.get('methodData') as FormArray).clear();
             this.methodDataList = this.methodList.filter(x => x.path === method)[0].methodParameters
                 .map(sysParam => {
                     const param = Object.assign(sysParam, this.data.parameters[sysParam.name]);
                     (this.meForm.get('methodData') as FormArray).push(new FormGroup({
                         name: new FormControl(param.name),
-                        value: new FormControl(),
+                        value: new FormControl(''),
                     }));
                     return {
                         title: param.description,
