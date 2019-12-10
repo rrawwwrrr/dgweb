@@ -36,6 +36,7 @@ export class TaskComponent implements OnInit, AfterViewInit {
     openDialogNew(): void {
         const dialogRef = this.dialog.open(NewTaskDialogComponent, {
             width: '90%',
+            height: '80%',
             data: {
                 systemsList: Object.assign({}, this.taskService.systemsList),
                 environments: this.taskService.environments.slice(),

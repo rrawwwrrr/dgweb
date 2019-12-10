@@ -44,3 +44,9 @@
 .param-launch h2 {
   text-align: center;
 }
+.param-launch-table mat-form-field{
+  width: 90%;
+}
+.param-launch-table :first-child td{
+  width: 30%;
+}

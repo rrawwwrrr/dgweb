@@ -32,31 +32,51 @@
           <mat-radio-button value="p">Переодически</mat-radio-button>
 
         </mat-radio-group>
-        <mat-form-field *ngIf="meForm.controls.launch.controls.type.value === 'p'">
-          <input type="number" formControlName="launchCount" matInput placeholder="Запусков">
-          <mat-error *ngIf="meForm.controls.launch.controls.launchCount.invalid">Должно быть число, больше 0</mat-error>
-        </mat-form-field>
-        <mat-form-field>
-          <input type="number" formControlName="genCount" matInput placeholder="Генераций">
-          <mat-error *ngIf="meForm.controls.launch.controls.genCount.invalid">Должно быть число, больше 0</mat-error>
-        </mat-form-field>
-        <mat-form-field *ngIf="meForm.controls.launch.controls.type.value === 'p'">
-          <input type="number" formControlName="periodicity" matInput placeholder="Периодичность(мин)">
-          <mat-error *ngIf="meForm.controls.launch.controls.periodicity.invalid">Должно быть число, больше 0</mat-error>
-        </mat-form-field>
-        <mat-form-field *ngIf="meForm.controls.launch.controls.type.value === 'p'">
-          <input matInput formControlName="timeStart" type="datetime-local" placeholder="Дата начала">
-        </mat-form-field>
-        <mat-form-field *ngIf="meForm.controls.launch.controls.type.value === 'p'">
-          <input matInput formControlName="timeStop" type="datetime-local" placeholder="Дата окончания">
-        </mat-form-field>
-        <!-- <mat-form-field *ngIf="meForm.controls.launch.controls.type.value === 'p'">
+        <table class="param-launch-table">
+          <tr>
+            <td>
+              <mat-form-field *ngIf="meForm.controls.launch.controls.type.value === 'p'">
+                <input type="number" formControlName="launchCount" matInput placeholder="Запусков">
+                <mat-error *ngIf="meForm.controls.launch.controls.launchCount.invalid">Должно быть число, больше 0
+                </mat-error>
+              </mat-form-field>
+            </td>
+            <td>
+              <mat-form-field>
+                <input type="number" formControlName="genCount" matInput placeholder="Генераций">
+                <mat-error *ngIf="meForm.controls.launch.controls.genCount.invalid">Должно быть число, больше 0
+                </mat-error>
+              </mat-form-field>
+            </td>
+            <td>
+              <mat-form-field *ngIf="meForm.controls.launch.controls.type.value === 'p'">
+                <input type="number" formControlName="periodicity" matInput placeholder="Периодичность(мин)">
+                <mat-error *ngIf="meForm.controls.launch.controls.periodicity.invalid">Должно быть число, больше 0
+                </mat-error>
+              </mat-form-field>
+            </td>
+          </tr>
+        </table>
+        <table>
+          <tr>
+            <td>
+              <mat-form-field *ngIf="meForm.controls.launch.controls.type.value === 'p'">
+                <input matInput formControlName="timeStart" type="datetime-local" placeholder="Дата начала">
+              </mat-form-field>
+            </td>
+            <td>
+              <mat-form-field *ngIf="meForm.controls.launch.controls.type.value === 'p'">
+                <input matInput formControlName="timeStop" type="datetime-local" placeholder="Дата окончания">
+              </mat-form-field>
+              <!-- <mat-form-field *ngIf="meForm.controls.launch.controls.type.value === 'p'">
           <input matInput placeholder="Время начала">
         </mat-form-field>
         <mat-form-field *ngIf="meForm.controls.launch.controls.type.value === 'p'">
           <input matInput placeholder="Время окончания">
         </mat-form-field> -->
-
+            </td>
+          </tr>
+        </table>
       </div>
     </div>
     <div class="newtask-right-container">
@@ -89,13 +109,15 @@
             <input *ngSwitchCase="'BigDecimal'" [formControl]="item.controls['value']" type="text" matInput
               placeholder="{{methodDataList[i].title}}">
 
-            <input *ngSwitchDefault matInput [formControl]="item.controls.value" placeholder="{{methodDataList[i].title}}">
+            <input *ngSwitchDefault matInput [formControl]="item.controls.value"
+              placeholder="{{methodDataList[i].title}}">
 
 
             <!-- <mat-error *ngIf="item.controls['value'].invalid">ошибка</mat-error> -->
-            <mat-error *ngIf="item.controls['value'].hasError('required')">Поле должно соответсвовать /<strong>{{methodDataList[i].regexp}}/</strong>
+            <mat-error *ngIf="item.controls['value'].hasError('pattern')">Поле должно соответсвовать
+              /<strong>{{methodDataList[i].regexp}}/</strong>
             </mat-error>
-            <mat-error *ngIf="item.controls['value'].hasError('pattern')">Поле должно быть<strong>заполнено</strong>
+            <mat-error *ngIf="item.controls['value'].hasError('required')">Поле должно быть <strong>заполнено</strong>
             </mat-error>
           </mat-form-field>
         </fieldset>
