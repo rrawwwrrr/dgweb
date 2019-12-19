@@ -30,7 +30,6 @@
         <mat-radio-group class="param-launch-radio" formControlName="type" aria-label="Параметры запуска">
           <mat-radio-button value="i">Единоразово</mat-radio-button>
           <mat-radio-button value="p">Переодически</mat-radio-button>
-
         </mat-radio-group>
         <table class="param-launch-table">
           <tr>
@@ -84,14 +83,26 @@
         <fieldset *ngIf="meForm.controls['method'].value" formArrayName="methodData">
           <mat-form-field *ngFor="let item of meForm.controls['methodData'].controls; let i = index"
             [ngSwitch]="methodDataList[i].type">
+
+            <input matInput *ngSwitchCase="'Auto'" placeholder="State" aria-label="State" [matAutocomplete]="auto" [formControl]="stateCtrl">
+            <mat-autocomplete *ngSwitchCase="'Auto'" #auto="matAutocomplete">
+              <mat-option *ngFor="let state of filteredStates | async" [value]="state.name">
+                <img class="example-option-img" aria-hidden [src]="state.flag" height="25">
+                <span>{{state.name}}</span> |
+                <small>Population: {{state.population}}</small>
+              </mat-option>
+            </mat-autocomplete>
+
             <mat-select *ngSwitchCase="'Array'" placeholder="{{methodDataList[i].title}}"
               [formControl]="item.controls['value']">
+              <mat-option>Не определено</mat-option>
               <mat-option *ngFor="let val of methodDataList[i].values" [value]="val.value">
                 {{val.text}}</mat-option>
             </mat-select>
 
             <mat-select *ngSwitchCase="'List'" multiple placeholder="{{methodDataList[i].title}}"
               [formControl]="item.controls['value']">
+              <mat-option>Не определено</mat-option>
               <mat-option *ngFor="let val of methodDataList[i].values" [value]="val.value">
                 {{val.text}}</mat-option>
             </mat-select>
