@@ -24,8 +24,8 @@ export class LoginComponent implements OnInit {
 
     ngOnInit() {
         this.loginForm = this.formBuilder.group({
-            username: ['', Validators.required],
-            password: ['', Validators.required]
+            username: ['rramazanov', Validators.required],
+            password: ['Tok81796505', Validators.required]
         });
 
         // reset login status
@@ -52,10 +52,12 @@ export class LoginComponent implements OnInit {
             .pipe(first())
             .subscribe(
                 data => {
+                    console.log(data);
                     /* this.dataService.addData(data); */
                     this.router.navigate([this.returnUrl]);
                 },
                 error => {
+                    console.log(error)
                     this.error = error;
                     this.loading = false;
                 });

@@ -16,6 +16,7 @@ export class TaskService {
         sizeOptions: [25, 50, 75, 100],
         dataLength: 0
     };
+
     public environments: Env[];
     public systems: System[] = [];
     public systemsList: SystemList[];
@@ -23,22 +24,35 @@ export class TaskService {
     get tasks(): Task[] { return this.taskSource.value; }
 
     constructor(private httpClient: HttpClient) {
+        this.taskSource.next([]);
         this.allLoad();
     }
 
-    public allLoad() {
-        this.getAllData().subscribe(x => {
-            this.taskSource.next([]);
-            this.systemsList = x.systems;
-            this.environments = x.environments;
-            Object.keys(this.systemsList).map(sys => this.systems = this.systems.concat(this.systemsList[sys]));
-            this.addTasks(x.data);
-            this.pages.dataLength = x.count;
-            this.parameters = this.addParameters(x.parameters);
-        });
+    private allLoad() {
+        if (localStorage.getItem('systemInfo')) {
+            this.loadSystemInfo(JSON.parse(localStorage.getItem('systemInfo')));
+        } else {
+            this.getSystemsInfo().subscribe(x => {
+                localStorage.setItem('systemInfo', JSON.stringify(x));
+                this.loadSystemInfo(x);
+            })
+        }
+        this.getTasks(null, null);
+        this.getCount();
+        // this.getAllData().subscribe(x => {
+        //     this.addTasks(x.data);
+        //     this.pages.dataLength = x.count;
+        // });
     }
 
-    addParameters(data: Parameter[]): Parameter[] {
+    private loadSystemInfo(x: InitData) {
+        this.systemsList = x.systems;
+        this.environments = x.environments;
+        Object.keys(this.systemsList).map(sys => this.systems = this.systems.concat(this.systemsList[sys]));
+        this.parameters = this.addParameters(x.parameters);
+    }
+
+    private addParameters(data: Parameter[]): Parameter[] {
         const reqexpPachage = /[A-Za-z]+\./gi;
         Object.keys(data).map(x => {
             data[x].type = data[x].type.replace(reqexpPachage, '');
@@ -64,13 +78,15 @@ export class TaskService {
         return data;
     }
 
-    addTasks(data: any) {
+    private addTasks(data: any) {
         const copiedData = this.tasks.slice();
         data.forEach(element => copiedData.push(this.createTask(element)));
         this.taskSource.next(copiedData);
     }
-    createTask(data): Task {
-        const gdata = data.gdata;
+
+    private createTask(data): Task {
+        console.log(data);
+        const gdata = data.gdata ? JSON.parse(data.gdata.value) : null;
         const progress = gdata
             ? `${gdata.length}/${gdata.filter(x => x.data).length}/${gdata.filter(x => x.error).length}/${data.total}`
             : '0/0/0/0';
@@ -82,23 +98,37 @@ export class TaskService {
             created: data.created
         };
     }
-    getTasks(paginator: MatPaginator, sort: MatSort) {
+
+    public getTasks(paginator: MatPaginator, sort: MatSort) {
         this.taskSource.next([]);
-        const option = this.getGetRequestOption(paginator, sort);
+        const option = this.getRequestOption(paginator, sort);
         this.getTasksRequest(option).subscribe(tasks => this.addTasks(tasks));
     }
 
-    getAllData() {
-        const href = `${this.host}/api/data/getdata`;
+    // private getAllData() {
+    //     const href = `${this.host}/api/data/getdata`;
+    //     return this.httpClient.get<InitData>(href);
+    // }
+
+    private getTasksRequest(param: string): Observable<InitData> {
+        const href = `${this.host}/api/data/getTasks${param}`;
         return this.httpClient.get<InitData>(href);
     }
 
-    getTasksRequest(param: string): Observable<InitData> {
-        const href = `${this.host}/api/data/gettasks/${param}`;
-        return this.httpClient.get<InitData>(href);
+    private getRequestOption(paginator: MatPaginator, sort: MatSort): string {
+        if (paginator && sort) {
+            return `?sortActive=${sort.active}&sortOrder=${sort.direction}&pageIndex=${paginator.pageIndex}&pageSize=${paginator.pageSize}`;
+        } else {
+            return `?pageSize=${this.pages.size}`;
+        }
     }
 
-    getGetRequestOption(paginator: MatPaginator, sort: MatSort): string {
-        return `?sortActive=${sort.active}&sortOrder=${sort.direction}&pageIndex=${paginator.pageIndex}&pageSize=${paginator.pageSize}`;
+    private getSystemsInfo() {
+        const href = `${this.host}/api/data/getSystemsInfo`;
+        return this.httpClient.get<InitData>(href);
+    }
+    private getCount() {
+        const href = `${this.host}/api/data/getCount`;
+        return this.httpClient.get<number>(href).subscribe(x => this.pages.dataLength = x);
     }
 }

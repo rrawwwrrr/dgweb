@@ -5,7 +5,7 @@ import { LoginComponent } from './login';
 import { AuthGuard } from './_helpers';
 
 const routes: Routes = [
-  { path: '', component: TaskComponent/*, canActivate: [AuthGuard] */},
+  { path: '', component: TaskComponent, canActivate: [AuthGuard]},
   { path: 'login', component: LoginComponent },
   { path: 'tasks', component: TaskComponent },
   { path: '**', redirectTo: '' }
